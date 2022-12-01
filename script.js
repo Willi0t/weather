@@ -16,7 +16,7 @@ const cities = document.querySelectorAll(".city");
 
 // Default city when the page loads
 let cityInput = "London";
-//Add click event to each city in the panel
+//Add click event to each city in the panel for each city
 cities.forEach((city) => {
   city.addEventListener("click", (e) => {
     //change from default city to the clicked one
@@ -41,7 +41,7 @@ form.addEventListener("submit", (e) => {
     app.style.opacity = "0";
   }
 
-  //prevent default behaviour of the form
+  //prevent default behaviour of the form, it did not work without it
   e.preventDefault();
 });
 
@@ -58,7 +58,6 @@ function dayOfTheWeek(day, month, year) {
   ];
   return weekday[new Date(`${day}/${month}/${year}`).getDay()];
 }
-console.log(dayOfTheWeek(30, 11, 2022));
 
 //weather data fetch function
 function fetchweatherData() {
@@ -68,11 +67,16 @@ function fetchweatherData() {
     // takes the data in json format and coverts it to js object
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      console.log(data); //consoleloged it too see what data i recived
       // adding temperature and weather condition
+      //adds temperature next city name and celcisu symbol
       temp.innerHTML = data.current.temp_c + "&#176";
+      //adds current weather condition
       conditionOutput.innerHTML = data.current.condition.text;
+      // loads current weather condition icon from API
+      icon.src = data.current.condition.icon;
 
+      //separating the values to day or month or year, i dont understand how this works but it gives me year month and date in numbers which i use in the date output
       const date = data.location.localtime;
       const y = parseInt(date.substr(0, 4));
       const m = parseInt(date.substr(5, 2));
@@ -81,18 +85,15 @@ function fetchweatherData() {
 
       //new format : 17:53 - Friday 9, 10 2021
       dateOutput.innerHTML = `${dayOfTheWeek(d, m, y)} ${d}, ${m} ${y}`;
+      //set time of current country/city
       timeOutput.innerHTML = time;
       //name of the city to the page
       nameOutput.innerHTML = data.location.name;
-      //get the icon url for the weather
       //set default time of day
       let timeOfDay = "day";
       if (!data.current.is_day) {
         timeOfDay = "night";
       }
-      // loads icon from API
-      icon.src = data.current.condition.icon;
-
       //weather details to the page
       cloudOutput.innerHTML = data.current.cloud + "%";
       humidityOutput.innerHTML = data.current.humidity + "%";
@@ -103,7 +104,6 @@ function fetchweatherData() {
       // change to night if it is night time in the city
       console.log(code);
       if (code === 1000) {
-        console.log(timeOfDay);
         app.style.backgroundImage = `url(./content/backgroundImages/${timeOfDay}/Clear.jpg)`;
         // btn.style.background = "#e5ba92";
         if (timeOfDay === "night") {
@@ -148,13 +148,13 @@ function fetchweatherData() {
         code === 1252
       ) {
         app.style.backgroundImage = `url(./content/backgroundImages/${timeOfDay}/Rain.jpg)`;
-        btn.style.background = "#647d75";
+        // btn.style.background = "#647d75";
         if (timeOfDay === "night") {
           // btn.style.background = "#325c80";
         }
       } else {
         app.style.backgroundImage = `url(./content/backgroundImages/${timeOfDay}/Snow.jpg)`;
-        btn.style.background = "#4d72aa";
+        // btn.style.background = "#4d72aa";
         if (timeOfDay === "night") {
           // btn.style.background = "#1b1b1";
         }
@@ -168,4 +168,4 @@ function fetchweatherData() {
 }
 
 fetchweatherData();
-// app.style.opacity = 1;
+app.style.opacity = 1;
