@@ -14,6 +14,8 @@ const search = document.querySelector(".search");
 const btn = document.querySelector(".submit");
 const cities = document.querySelectorAll(".city");
 
+console.log(nameOutput.length);
+
 // Default city when the page loads
 let cityInput = "London";
 //Add click event to each city in the panel for each city
@@ -70,12 +72,16 @@ function fetchweatherData() {
       console.log(data); //consoleloged it too see what data i recived
       // adding temperature and weather condition
       //adds temperature next city name and celcisu symbol
-      temp.innerHTML = data.current.temp_c + "&#176";
+      temp.innerHTML = Math.round(data.current.temp_c) + "&#176";
       //adds current weather condition
       conditionOutput.innerHTML = data.current.condition.text;
       // loads current weather condition icon from API
-      icon.src = data.current.condition.icon;
+      icon.src = "https:" + data.current.condition.icon;
 
+      if (nameOutput.innerHTML.length > 2) {
+        name.style = "font-size: 2rem;";
+        temp.style = "font-size: 5rem;";
+      }
       //separating the values to day or month or year, i dont understand how this works but it gives me year month and date in numbers which i use in the date output
       const date = data.location.localtime;
       const y = parseInt(date.substr(0, 4));
